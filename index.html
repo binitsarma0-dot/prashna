@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Prashna — AI Test Generator for Teachers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23059669'/><text x='32' y='46' font-size='36' text-anchor='middle' font-family='Georgia,serif' fill='white' font-style='italic'>P</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g50:#ECFDF5;--g100:#D1FAE5;--g200:#A7F3D0;--g400:#34D399;
+  --g500:#10B981;--g600:#059669;--g700:#047857;--g800:#065F46;--g900:#064E3B;
+  --ink:#0C1A14;--soft:#2D4A3E;--mut:#6B8F7A;--bdr:rgba(16,185,129,0.18);
+  --sur:#F0FDF8;--wht:#FFFFFF;
+  --ffd:'DM Serif Display',Georgia,serif;--ffb:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ffb);background:var(--wht);color:var(--ink);line-height:1.6;overflow-x:hidden}
+
+/* LOGO */
+.logo{display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none}
+.logo-mark{width:32px;height:32px;flex-shrink:0}
+.logo-text{font-family:var(--ffd);font-size:20px;color:var(--g700);letter-spacing:-.3px}
+.logo-text em{color:var(--g400);font-style:italic}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr)}
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-links a{font-size:14px;color:var(--mut);text-decoration:none;font-weight:500;transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--g600)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-cta{background:var(--g500);color:#fff;border:none;border-radius:9px;padding:8px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--ffb);transition:background .2s;white-space:nowrap}
+.nav-cta:hover{background:var(--g600)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{display:block;width:22px;height:2px;background:var(--g700);border-radius:2px}
+.mob-menu{display:none;position:fixed;top:58px;left:0;right:0;z-index:199;background:var(--wht);border-bottom:1px solid var(--bdr);flex-direction:column;padding:12px 20px 16px;gap:2px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:15px;color:var(--ink);text-decoration:none;font-weight:500;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.mob-cta{margin-top:10px;width:100%;background:var(--g500);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--ffb)}
+
+/* HERO */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:88px 20px 56px;text-align:center;position:relative;overflow:hidden}
+.hbg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,var(--g100),transparent 70%)}
+.hdots{position:absolute;inset:0;z-index:0;background-image:radial-gradient(circle,var(--g200) 1px,transparent 1px);background-size:28px 28px;opacity:.3}
+.hc{position:relative;z-index:1;max-width:720px;width:100%}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--g50);border:1px solid var(--g200);color:var(--g700);font-size:13px;font-weight:500;padding:6px 16px;border-radius:100px;margin-bottom:26px;animation:fu .6s ease both}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--g400);flex-shrink:0}
+.hero h1{font-family:var(--ffd);font-size:clamp(34px,8vw,70px);line-height:1.08;letter-spacing:-1px;color:var(--ink);margin-bottom:18px;animation:fu .7s .1s ease both}
+.hero h1 em{color:var(--g500);font-style:italic}
+.hsub{font-size:clamp(15px,2.5vw,17px);color:var(--mut);max-width:480px;margin:0 auto 34px;line-height:1.65;animation:fu .7s .2s ease both}
+.hacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:fu .7s .3s ease both}
+.btnp{background:var(--g500);color:#fff;border:none;border-radius:11px;padding:13px 26px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--ffb);box-shadow:0 4px 18px rgba(16,185,129,.35);transition:background .2s,transform .15s}
+.btnp:hover{background:var(--g600);transform:translateY(-2px)}
+.btns{background:transparent;color:var(--g700);border:1.5px solid var(--g200);border-radius:11px;padding:13px 22px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--ffb);transition:background .2s,border-color .2s}
+.btns:hover{background:var(--g50);border-color:var(--g400)}
+.hstats{display:flex;gap:28px;justify-content:center;margin-top:44px;flex-wrap:wrap;animation:fu .7s .45s ease both}
+.hstat{text-align:center;min-width:72px}
+.hsn{font-family:var(--ffd);font-size:28px;color:var(--g600);line-height:1}
+.hsl{font-size:11px;color:var(--mut);margin-top:3px;font-weight:500}
+
+/* SECTIONS */
+.sec{padding:60px 20px}
+.sec-sur{padding:60px 20px;background:var(--sur);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
+.con{max-width:940px;margin:0 auto}
+.slbl{text-align:center;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin-bottom:10px}
+.stit{text-align:center;font-family:var(--ffd);font-size:clamp(22px,4vw,38px);line-height:1.15;letter-spacing:-.5px;color:var(--ink);margin-bottom:36px}
+
+/* DEMO CARD */
+.demo-card{background:var(--wht);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;box-shadow:0 8px 36px rgba(16,185,129,.07)}
+.dtop{background:var(--g700);padding:11px 16px;display:flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dr{background:#ff5f57}.dy{background:#febc2e}.dg{background:#28c840}
+.dtit{flex:1;text-align:center;font-size:12px;color:rgba(255,255,255,.6);font-weight:500}
+.dbody{display:grid;grid-template-columns:1fr 1fr}
+.dleft{padding:22px;border-right:1px solid var(--bdr)}
+.dright{padding:22px;background:var(--sur)}
+.flbl{font-size:11px;font-weight:600;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.dta{width:100%;height:130px;padding:10px;border:1.5px solid var(--bdr);border-radius:9px;font-family:var(--ffb);font-size:13px;color:var(--soft);resize:none;background:var(--sur);line-height:1.6;outline:none;transition:border-color .2s}
+.dta:focus{border-color:var(--g400)}
+.dctrl{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.dsel{flex:1;min-width:110px;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:8px;font-family:var(--ffb);font-size:13px;color:var(--ink);background:var(--wht);outline:none;cursor:pointer}
+.genbtn{width:100%;padding:12px;background:var(--g500);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;font-family:var(--ffb);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.genbtn:hover{background:var(--g600)}
+.genbtn:disabled{opacity:.75;cursor:wait}
+.bqt{font-size:11px;background:var(--g100);color:var(--g700);padding:3px 10px;border-radius:100px;font-weight:600}
+.mcard{background:var(--wht);border:1px solid var(--bdr);border-radius:9px;padding:12px 14px;margin-bottom:8px;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.mcard.vis{opacity:1;transform:translateY(0)}
+.mq{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;line-height:1.5}
+.mopts{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.mopt{font-size:12px;padding:5px 8px;border:1px solid var(--bdr);border-radius:6px;color:var(--soft);cursor:pointer;transition:all .15s}
+.mopt:hover{background:var(--g50);border-color:var(--g400)}
+.mopt.cor{background:var(--g50);border-color:var(--g400);color:var(--g700);font-weight:500}
+
+/* FEATURES */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.fc{padding:22px 18px;border:1px solid var(--bdr);border-radius:13px;background:var(--wht);transition:box-shadow .2s,transform .15s}
+.fc:hover{box-shadow:0 6px 22px rgba(16,185,129,.1);transform:translateY(-2px)}
+.ficon{width:40px;height:40px;border-radius:10px;background:var(--g50);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:12px}
+.ftit{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.fdesc{font-size:13px;color:var(--mut);line-height:1.6}
+
+/* PRICING */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.pc{background:var(--wht);border:1px solid var(--bdr);border-radius:13px;padding:22px 18px;position:relative}
+.pc.pop{border:2px solid var(--g400)}
+.popb{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--g500);color:#fff;font-size:11px;font-weight:600;padding:3px 13px;border-radius:100px;white-space:nowrap}
+.pname{font-size:12px;font-weight:600;color:var(--mut);margin-bottom:6px;letter-spacing:.04em}
+.pprice{font-family:var(--ffd);font-size:32px;color:var(--ink);line-height:1}
+.pprice sub{font-size:13px;font-family:var(--ffb);color:var(--mut);vertical-align:baseline}
+.pper{font-size:12px;color:var(--mut);margin:3px 0 14px}
+.pfeats{list-style:none;margin-bottom:18px}
+.pfeats li{font-size:13px;color:var(--soft);padding:4px 0;border-bottom:1px solid var(--bdr);display:flex;gap:7px;align-items:flex-start}
+.pfeats li:last-child{border-bottom:none}
+.ck{color:var(--g500);font-weight:700;flex-shrink:0}
+.pbtn{width:100%;padding:10px;border:1.5px solid var(--g400);border-radius:9px;background:transparent;color:var(--g700);font-weight:600;font-family:var(--ffb);font-size:14px;cursor:pointer;transition:all .2s}
+.pbtn:hover,.pbtn.fil{background:var(--g500);color:#fff;border-color:var(--g500)}
+
+/* SUPPORT */
+.supbar{background:var(--g800);color:rgba(255,255,255,.8);text-align:center;padding:13px 20px;font-size:14px}
+.supbar a{color:var(--g400);text-decoration:none;font-weight:600}
+
+/* FOOTER */
+footer{background:var(--g900);color:rgba(255,255,255,.6);padding:28px 20px}
+.fi{max-width:940px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.flogo{font-family:var(--ffd);font-size:19px;color:#fff;display:flex;align-items:center;gap:7px}
+.flogo em{color:var(--g400);font-style:italic}
+.flinks{display:flex;gap:18px}
+.flinks a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px}
+
+/* DASHBOARD */
+.dbframe{border:1px solid var(--bdr);overflow:hidden}
+.dbtop{background:var(--g800);display:flex;align-items:center;padding:0 14px;height:48px;gap:10px;overflow:hidden}
+.dblogo{font-family:var(--ffd);color:#fff;font-size:17px;display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0}
+.dblogo em{color:var(--g400);font-style:italic}
+.dblm{width:24px;height:24px;flex-shrink:0}
+.dbtabs{display:flex;gap:2px;margin-left:10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dbtab{padding:5px 11px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;white-space:nowrap}
+.dbtab.act{background:rgba(255,255,255,.12);color:#fff}
+.dbu{margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.dbav{width:28px;height:28px;border-radius:50%;background:var(--g400);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--g900);flex-shrink:0}
+.dbbody{display:flex;min-height:480px}
+.dbsb{background:var(--g900);padding:14px 8px;display:flex;flex-direction:column;gap:2px;width:180px;flex-shrink:0}
+.sbsl{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;padding:7px 9px 3px}
+.sbi{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:7px;font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s}
+.sbi:hover{background:rgba(255,255,255,.08);color:#fff}
+.sbi.act{background:var(--g600);color:#fff}
+.sic{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.slb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbmain{background:var(--sur);padding:18px;flex:1;overflow:auto;min-width:0}
+.dmh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.dmt{font-size:17px;font-weight:600;color:var(--ink);font-family:var(--ffd)}
+.nbtn{background:var(--g500);color:#fff;border:none;border-radius:8px;padding:8px 15px;font-size:13px;font-weight:600;font-family:var(--ffb);cursor:pointer;transition:background .2s}
+.nbtn:hover{background:var(--g600)}
+.srow{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+.sc{background:var(--wht);border:1px solid var(--bdr);border-radius:10px;padding:13px}
+.scn{font-size:22px;font-weight:700;color:var(--g600);font-family:var(--ffd);line-height:1}
+.scl{font-size:11px;color:var(--mut);margin-top:3px;font-weight:500}
+.ttbl{background:var(--wht);border:1px solid var(--bdr);border-radius:11px;overflow:hidden;overflow-x:auto}
+.thead{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:8px 13px;background:var(--g50);border-bottom:1px solid var(--bdr);min-width:440px}
+.thc{font-size:11px;font-weight:600;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+.trow{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:10px 13px;border-bottom:1px solid var(--bdr);align-items:center;cursor:pointer;transition:background .1s;min-width:440px}
+.trow:last-child{border-bottom:none}
+.trow:hover{background:var(--g50)}
+.tdm{font-size:13px;font-weight:500;color:var(--ink)}
+.tds{font-size:11px;color:var(--mut);margin-top:2px}
+.tdc{font-size:13px;color:var(--soft)}
+.sp{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px}
+.slive{background:var(--g100);color:var(--g700)}.sdraft{background:#FFF7ED;color:#92400E}.sclosed{background:#F1EFE8;color:#5F5E5A}
+
+/* ANIM */
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spn{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.spng{border-color:rgba(16,185,129,.3);border-top-color:var(--g500)}
+
+/* PAGE */
+.page{display:none}.page.active{display:block}
+
+/* MOBILE */
+@media(max-width:640px){
+  nav{padding:0 14px}
+  .nav-links,.nav-cta{display:none}
+  .ham{display:flex}
+
+  .hero{padding:78px 16px 48px}
+  .hacts{flex-direction:column}
+  .btnp,.btns{width:100%;text-align:center}
+  .hstats{gap:18px}
+
+  .dbody{grid-template-columns:1fr}
+  .dleft{border-right:none;border-bottom:1px solid var(--bdr)}
+  .dtit{display:none}
+
+  .fgrid,.pgrid{grid-template-columns:1fr}
+
+  .dbbody{flex-direction:column}
+  .dbsb{width:100%;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:8px}
+  .sbsl{display:none}
+  .sbi{padding:7px 10px;flex-shrink:0}
+  .slb{display:none}
+  .sic{width:auto;font-size:17px}
+  .dbsb .sbi:last-child{display:none}
+  .srow{grid-template-columns:repeat(2,1fr)}
+  .scn{font-size:18px}
+  .dbtabs{gap:0}
+  .dbtab{padding:4px 8px;font-size:11px}
+  .dbu span{display:none}
+
+  .thead,.trow{grid-template-columns:2fr 1fr 1fr;min-width:0}
+  .thead .thc:nth-child(4),.thead .thc:nth-child(5),
+  .trow>*:nth-child(4),.trow>*:nth-child(5){display:none}
+
+  .fi{flex-direction:column;text-align:center}
+  .flinks{justify-content:center}
+  .sec,.sec-sur{padding:44px 16px}
+
+  .tab-create-grid{grid-template-columns:1fr !important}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('landing')">
+    <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="#059669"/>
+      <text x="20" y="29" font-size="23" text-anchor="middle" font-family="Georgia,serif" fill="white" font-style="italic">P</text>
+    </svg>
+    <div class="logo-text">Prashna<em>.</em></div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#" onclick="showPage('landing');return false">Home</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#" onclick="showPage('dashboard');return false">Dashboard</a>
+    </div>
+    <button class="nav-cta" onclick="showPage('dashboard')">Try for free</button>
+    <button class="ham" id="ham" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mob-menu">
+  <a href="#" onclick="showPage('landing');closeMenu();return false">Home</a>
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#" onclick="showPage('dashboard');closeMenu();return false">Dashboard Demo</a>
+  <button class="mob-cta" onclick="showPage('dashboard');closeMenu()">Try for free →</button>
+</div>
+
+<!-- ═══ LANDING ═══ -->
+<div id="page-landing" class="page active">
+
+  <section class="hero">
+    <div class="hbg"></div><div class="hdots"></div>
+    <div class="hc">
+      <div class="pill"><span class="pdot"></span>AI-powered test generation for Indian classrooms</div>
+      <h1>Create perfect tests<br>in <em>seconds,</em> not hours</h1>
+      <p class="hsub">Paste your notes or syllabus — Prashna generates MCQs, short answer, and essay questions instantly. Share with students via a simple link.</p>
+      <div class="hacts">
+        <button class="btnp" onclick="showPage('dashboard')">Start generating free →</button>
+        <button class="btns" onclick="document.getElementById('demo-sec').scrollIntoView({behavior:'smooth'})">See demo</button>
+      </div>
+      <div class="hstats">
+        <div class="hstat"><div class="hsn">10k+</div><div class="hsl">Questions generated</div></div>
+        <div class="hstat"><div class="hsn">500+</div><div class="hsl">Teachers onboard</div></div>
+        <div class="hstat"><div class="hsn">2 min</div><div class="hsl">Avg test creation</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-sur" id="demo-sec">
+    <div class="con">
+      <div class="slbl">Live demo</div>
+      <h2 class="stit">See it work — right now</h2>
+      <div class="demo-card">
+        <div class="dtop">
+          <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+          <div class="dtit">prashna.in — Generate Test</div>
+        </div>
+        <div class="dbody">
+          <div class="dleft">
+            <div class="flbl">Paste notes / topic</div>
+            <textarea class="dta" id="demo-input">Chapter 7: Photosynthesis — light-dependent reactions occur in the thylakoid membrane. ATP and NADPH are produced. Calvin cycle fixes CO₂ into G3P using RuBisCO. Oxygen is released as a by-product.</textarea>
+            <div class="dctrl">
+              <select class="dsel"><option>MCQ (4 options)</option><option>True / False</option><option>Short Answer</option></select>
+              <select class="dsel"><option>5 questions</option><option>10 questions</option><option>20 questions</option></select>
+            </div>
+            <button class="genbtn" id="demo-btn" onclick="generateDemo()">
+              <span id="demo-btn-txt">✨ Generate Questions</span>
+            </button>
+          </div>
+          <div class="dright">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+              <div class="flbl">Generated questions</div>
+              <span class="bqt" id="d-badge" style="display:none">5 MCQs</span>
+            </div>
+            <div id="demo-out">
+              <div style="height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mut);font-size:14px;gap:8px">
+                <span style="font-size:26px">📝</span>Questions will appear here...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="features">
+    <div class="con">
+      <div class="slbl">Features</div>
+      <h2 class="stit">Everything a teacher needs</h2>
+      <div class="fgrid">
+        <div class="fc"><div class="ficon">🧠</div><div class="ftit">AI Question Generator</div><div class="fdesc">Upload notes, PDF, or type any topic. AI creates MCQ, short answer, and essay questions aligned to CBSE, ICSE, and state boards.</div></div>
+        <div class="fc"><div class="ficon">🔗</div><div class="ftit">Share via Link</div><div class="fdesc">One click generates a shareable link. Students attempt on any device — no app download needed.</div></div>
+        <div class="fc"><div class="ficon">✅</div><div class="ftit">Auto Grading</div><div class="fdesc">MCQs graded instantly. Results arrive in your dashboard the moment students submit. No manual checking.</div></div>
+        <div class="fc"><div class="ficon">📊</div><div class="ftit">Performance Analytics</div><div class="fdesc">See which topics your class struggles with. Per-student scorecards and class-wide weak area reports.</div></div>
+        <div class="fc"><div class="ficon">📄</div><div class="ftit">PDF Export</div><div class="fdesc">Download a clean, print-ready question paper with answer key. Perfect for offline tests.</div></div>
+        <div class="fc"><div class="ficon">🇮🇳</div><div class="ftit">Indian Curriculum Ready</div><div class="fdesc">Built for CBSE, ICSE, JEE, NEET, and state boards. Hindi support coming soon.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-sur" id="pricing">
+    <div class="con">
+      <div class="slbl">Pricing</div>
+      <h2 class="stit">Simple, teacher-friendly pricing</h2>
+      <div class="pgrid">
+        <div class="pc">
+          <div class="pname">FREE</div>
+          <div class="pprice">₹0</div><div class="pper">forever</div>
+          <ul class="pfeats">
+            <li><span class="ck">✓</span>3 tests per month</li>
+            <li><span class="ck">✓</span>25 MCQs per test</li>
+            <li><span class="ck">✓</span>Share via link</li>
+            <li><span class="ck">✓</span>Basic analytics</li>
+          </ul>
+          <button class="pbtn" onclick="showPage('dashboard')">Get started free</button>
+        </div>
+        <div class="pc pop">
+          <div class="popb">Most popular</div>
+          <div class="pname">TEACHER PRO</div>
+          <div class="pprice">₹299<sub>/mo</sub></div><div class="pper">billed monthly</div>
+          <ul class="pfeats">
+            <li><span class="ck">✓</span>Unlimited tests</li>
+            <li><span class="ck">✓</span>100 questions per test</li>
+            <li><span class="ck">✓</span>MCQ + short answer + essay</li>
+            <li><span class="ck">✓</span>PDF export, no watermark</li>
+            <li><span class="ck">✓</span>Full analytics dashboard</li>
+            <li><span class="ck">✓</span>Email results to students</li>
+          </ul>
+          <button class="pbtn fil" onclick="showPage('dashboard')">Start free trial</button>
+        </div>
+        <div class="pc">
+          <div class="pname">SCHOOL PLAN</div>
+          <div class="pprice">₹999<sub>/mo</sub></div><div class="pper">up to 10 teachers</div>
+          <ul class="pfeats">
+            <li><span class="ck">✓</span>Everything in Pro</li>
+            <li><span class="ck">✓</span>10 teacher accounts</li>
+            <li><span class="ck">✓</span>School-wide analytics</li>
+            <li><span class="ck">✓</span>Custom school branding</li>
+            <li><span class="ck">✓</span>Priority support</li>
+          </ul>
+          <button class="pbtn" onclick="window.location.href='tel:9863168046'">📞 Contact us</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="supbar">Need help? Call or WhatsApp: <a href="tel:9863168046">📞 9863168046</a></div>
+
+  <footer>
+    <div class="fi">
+      <div class="flogo">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#059669"/><text x="20" y="29" font-size="23" text-anchor="middle" font-family="Georgia,serif" fill="white" font-style="italic">P</text></svg>
+        Prashna<em>.</em>
+      </div>
+      <div style="font-size:13px">© 2025 Prashna · Made for Indian teachers</div>
+      <div class="flinks">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="tel:9863168046">Support</a>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /landing -->
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="page-dashboard" class="page">
+  <div style="padding-top:58px">
+    <div class="dbframe">
+
+      <!-- Topbar -->
+      <div class="dbtop">
+        <div class="dblogo" onclick="showPage('landing')">
+          <svg class="dblm" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#34D399"/><text x="20" y="29" font-size="23" text-anchor="middle" font-family="Georgia,serif" fill="#064E3B" font-style="italic">P</text></svg>
+          Prashna<em>.</em>
+        </div>
+        <div class="dbtabs">
+          <div class="dbtab act" onclick="tabSwitch('create',this,'dt')">Dashboard</div>
+          <div class="dbtab" onclick="tabSwitch('tests',this,'dt')">My Tests</div>
+          <div class="dbtab" onclick="tabSwitch('students',this,'dt')">Students</div>
+          <div class="dbtab" onclick="tabSwitch('analytics',this,'dt')">Analytics</div>
+        </div>
+        <div class="dbu">
+          <span style="font-size:12px;color:rgba(255,255,255,.6)">Mrs. Sharma</span>
+          <div class="dbav">RS</div>
+        </div>
+      </div>
+
+      <div class="dbbody">
+        <!-- Sidebar -->
+        <div class="dbsb">
+          <div class="sbsl">Create</div>
+          <div class="sbi act" onclick="tabSwitch('create',this,'sb')"><span class="sic">✨</span><span class="slb">New Test</span></div>
+          <div class="sbi" onclick="tabSwitch('tests',this,'sb')"><span class="sic">📋</span><span class="slb">My Tests</span></div>
+          <div class="sbsl">Manage</div>
+          <div class="sbi" onclick="tabSwitch('students',this,'sb')"><span class="sic">👥</span><span class="slb">Students</span></div>
+          <div class="sbi" onclick="tabSwitch('analytics',this,'sb')"><span class="sic">📊</span><span class="slb">Analytics</span></div>
+          <div class="sbi" onclick="tabSwitch('pdf',this,'sb')"><span class="sic">📄</span><span class="slb">PDF Export</span></div>
+          <div class="sbsl">Account</div>
+          <div class="sbi"><span class="sic">⚙️</span><span class="slb">Settings</span></div>
+          <div class="sbi" style="margin-top:auto" onclick="showPage('landing')"><span class="sic">←</span><span class="slb">Back home</span></div>
+        </div>
+
+        <!-- Main -->
+        <div class="dbmain">
+
+          <!-- CREATE -->
+          <div id="tab-create">
+            <div class="dmh"><div class="dmt">Create new test</div></div>
+            <div class="tab-create-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div style="background:var(--wht);border:1px solid var(--bdr);border-radius:12px;padding:16px">
+                <div class="flbl" style="margin-bottom:7px">Test title</div>
+                <input type="text" value="Chapter 7 — Photosynthesis" style="width:100%;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:8px;font-family:var(--ffb);font-size:14px;color:var(--ink);outline:none;margin-bottom:12px;background:var(--wht)">
+                <div class="flbl" style="margin-bottom:7px">Paste notes / topic</div>
+                <textarea style="width:100%;height:110px;padding:10px;border:1.5px solid var(--bdr);border-radius:8px;font-family:var(--ffb);font-size:13px;color:var(--soft);resize:none;line-height:1.6;outline:none;background:var(--sur)">Light-dependent reactions: thylakoid membrane. Produces ATP and NADPH. Water split (photolysis) → O₂ released.
+
+Calvin Cycle: stroma. CO₂ fixed by RuBisCO into G3P. 3 turns per glucose.</textarea>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px">
+                  <select class="dsel"><option>MCQ</option><option>Short Answer</option><option>Mixed</option></select>
+                  <select class="dsel"><option>10 questions</option><option>20 questions</option></select>
+                </div>
+                <select class="dsel" style="width:100%;margin-top:7px"><option>Medium difficulty</option><option>Easy</option><option>Hard</option></select>
+                <button class="genbtn" style="margin-top:10px" onclick="dashGen()">
+                  <span id="dash-btn-txt">✨ Generate with AI</span>
+                </button>
+              </div>
+              <div style="background:var(--wht);border:1px solid var(--bdr);border-radius:12px;padding:16px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+                  <div class="flbl">Preview</div>
+                  <span class="bqt" id="dash-badge" style="display:none">10 MCQs</span>
+                </div>
+                <div id="dash-out">
+                  <div style="height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mut);font-size:14px;gap:8px"><span style="font-size:26px">📝</span>Questions here</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TESTS -->
+          <div id="tab-tests" style="display:none">
+            <div class="dmh">
+              <div class="dmt">My tests</div>
+              <button class="nbtn" onclick="tabSwitch('create',document.querySelector('.sbi'))">+ New test</button>
+            </div>
+            <div class="srow">
+              <div class="sc"><div class="scn">12</div><div class="scl">Tests created</div></div>
+              <div class="sc"><div class="scn">247</div><div class="scl">Attempts</div></div>
+              <div class="sc"><div class="scn">68%</div><div class="scl">Avg score</div></div>
+              <div class="sc"><div class="scn">3</div><div class="scl">Live now</div></div>
+            </div>
+            <div class="ttbl">
+              <div class="thead"><div class="thc">Test name</div><div class="thc">Questions</div><div class="thc">Attempted</div><div class="thc">Avg</div><div class="thc">Status</div></div>
+              <div class="trow"><div><div class="tdm">Ch 7 — Photosynthesis</div><div class="tds">2 days ago</div></div><div class="tdc">20 MCQs</div><div class="tdc">34</div><div class="tdc">72%</div><div><span class="sp slive">Live</span></div></div>
+              <div class="trow"><div><div class="tdm">Unit 3 — Cell Division</div><div class="tds">5 days ago</div></div><div class="tdc">15 MCQs</div><div class="tdc">28</div><div class="tdc">61%</div><div><span class="sp slive">Live</span></div></div>
+              <div class="trow"><div><div class="tdm">Mid-term — Biology 10</div><div class="tds">2 weeks ago</div></div><div class="tdc">40 MCQs</div><div class="tdc">42</div><div class="tdc">58%</div><div><span class="sp sclosed">Closed</span></div></div>
+              <div class="trow"><div><div class="tdm">Ch 5 — Respiration</div><div class="tds">Today</div></div><div class="tdc">10 MCQs</div><div class="tdc">—</div><div class="tdc">—</div><div><span class="sp sdraft">Draft</span></div></div>
+            </div>
+          </div>
+
+          <!-- ANALYTICS -->
+          <div id="tab-analytics" style="display:none">
+            <div class="dmh"><div class="dmt">Class analytics</div></div>
+            <div class="srow">
+              <div class="sc"><div class="scn">247</div><div class="scl">Total attempts</div></div>
+              <div class="sc"><div class="scn">68%</div><div class="scl">Class avg</div></div>
+              <div class="sc"><div class="scn">94%</div><div class="scl">Completion</div></div>
+              <div class="sc"><div class="scn">4</div><div class="scl">Weak topics</div></div>
+            </div>
+            <div style="background:var(--wht);border:1px solid var(--bdr);border-radius:11px;padding:16px;margin-top:10px">
+              <div class="flbl" style="margin-bottom:13px">Weak areas — topics to revise</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 130px;font-size:13px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Calvin Cycle</div><div style="flex:1;height:7px;background:var(--g100);border-radius:100px;overflow:hidden;min-width:30px"><div style="height:100%;width:38%;background:#E24B4A;border-radius:100px"></div></div><div style="font-size:12px;color:#A32D2D;font-weight:600;min-width:30px;text-align:right">38%</div></div>
+                <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 130px;font-size:13px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Photolysis</div><div style="flex:1;height:7px;background:var(--g100);border-radius:100px;overflow:hidden;min-width:30px"><div style="height:100%;width:52%;background:#EF9F27;border-radius:100px"></div></div><div style="font-size:12px;color:#633806;font-weight:600;min-width:30px;text-align:right">52%</div></div>
+                <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 130px;font-size:13px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ATP synthesis</div><div style="flex:1;height:7px;background:var(--g100);border-radius:100px;overflow:hidden;min-width:30px"><div style="height:100%;width:61%;background:#EF9F27;border-radius:100px"></div></div><div style="font-size:12px;color:#633806;font-weight:600;min-width:30px;text-align:right">61%</div></div>
+                <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 130px;font-size:13px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Thylakoid</div><div style="flex:1;height:7px;background:var(--g100);border-radius:100px;overflow:hidden;min-width:30px"><div style="height:100%;width:74%;background:var(--g500);border-radius:100px"></div></div><div style="font-size:12px;color:var(--g700);font-weight:600;min-width:30px;text-align:right">74%</div></div>
+                <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 130px;font-size:13px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RuBisCO</div><div style="flex:1;height:7px;background:var(--g100);border-radius:100px;overflow:hidden;min-width:30px"><div style="height:100%;width:81%;background:var(--g500);border-radius:100px"></div></div><div style="font-size:12px;color:var(--g700);font-weight:600;min-width:30px;text-align:right">81%</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STUDENTS -->
+          <div id="tab-students" style="display:none">
+            <div class="dmh"><div class="dmt">Students</div></div>
+            <div style="background:var(--wht);border:1px solid var(--bdr);border-radius:11px;padding:36px;text-align:center;color:var(--mut)">
+              <div style="font-size:38px;margin-bottom:10px">👥</div>
+              <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:5px">Student roster</div>
+              <div style="font-size:13px;margin-bottom:14px">Coming in Week 2 of development.</div>
+              <a href="tel:9863168046" style="display:inline-block;background:var(--g500);color:#fff;padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;text-decoration:none">📞 Call: 9863168046</a>
+            </div>
+          </div>
+
+          <!-- PDF -->
+          <div id="tab-pdf" style="display:none">
+            <div class="dmh"><div class="dmt">PDF Export</div></div>
+            <div style="background:var(--wht);border:1px solid var(--bdr);border-radius:11px;padding:36px;text-align:center;color:var(--mut)">
+              <div style="font-size:38px;margin-bottom:10px">📄</div>
+              <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:5px">Export tests as PDF</div>
+              <div style="font-size:13px;margin-bottom:14px">Question paper + answer key. Coming in Week 2.</div>
+              <a href="tel:9863168046" style="display:inline-block;background:var(--g500);color:#fff;padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;text-decoration:none">📞 Call: 9863168046</a>
+            </div>
+          </div>
+
+        </div><!-- /dbmain -->
+      </div><!-- /dbbody -->
+
+      <div class="supbar">Need help? Call or WhatsApp: <a href="tel:9863168046">📞 9863168046</a></div>
+    </div>
+  </div>
+</div><!-- /dashboard -->
+
+<script>
+var mcqs=[
+  {q:"Where do light-dependent reactions occur?",opts:["Stroma","Thylakoid membrane","Cell wall","Cytoplasm"],ans:1},
+  {q:"Which enzyme fixes CO₂ in the Calvin cycle?",opts:["DNA polymerase","ATP synthase","RuBisCO","Amylase"],ans:2},
+  {q:"What is released when water molecules split during photolysis?",opts:["CO₂ and H₂","O₂ and H⁺ ions","Glucose","ATP only"],ans:1},
+  {q:"What is the primary product of the Calvin cycle?",opts:["ATP","NADPH","G3P","Chlorophyll"],ans:2},
+  {q:"Which molecules does the Calvin cycle use from light reactions?",opts:["CO₂ and H₂O","O₂ and glucose","ATP and NADPH","ADP and NADP⁺"],ans:2}
+];
+
+function showPage(p){
+  document.getElementById('page-landing').classList.toggle('active',p==='landing');
+  document.getElementById('page-dashboard').classList.toggle('active',p==='dashboard');
+  window.scrollTo(0,0);
+  closeMenu();
+}
+
+function toggleMenu(){document.getElementById('mob-menu').classList.toggle('open')}
+function closeMenu(){document.getElementById('mob-menu').classList.remove('open')}
+
+function tabSwitch(tab,el,src){
+  ['create','tests','analytics','students','pdf'].forEach(function(t){
+    var d=document.getElementById('tab-'+t);
+    if(d) d.style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.sbi').forEach(function(e){e.classList.remove('act')});
+  document.querySelectorAll('.dbtab').forEach(function(e){e.classList.remove('act')});
+  if(el && src==='sb') el.classList.add('act');
+  if(el && src==='dt') el.classList.add('act');
+  var map={create:0,tests:1,students:2,analytics:3};
+  if(map[tab]!==undefined){
+    var dt=document.querySelectorAll('.dbtab');
+    if(dt[map[tab]]) dt[map[tab]].classList.add('act');
+    var sb=document.querySelectorAll('.sbi');
+    if(sb[map[tab]]) sb[map[tab]].classList.add('act');
+  }
+}
+
+function generateDemo(){
+  var btn=document.getElementById('demo-btn');
+  var txt=document.getElementById('demo-btn-txt');
+  btn.disabled=true;
+  txt.innerHTML='<div class="spn"></div> Generating...';
+  document.getElementById('demo-out').innerHTML='<div style="height:160px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px;gap:9px"><div class="spn spng"></div>AI generating...</div>';
+  setTimeout(function(){
+    btn.disabled=false;
+    txt.innerHTML='✨ Generate Questions';
+    document.getElementById('d-badge').style.display='inline-block';
+    renderMCQs('demo-out');
+  },1800);
+}
+
+function dashGen(){
+  var txt=document.getElementById('dash-btn-txt');
+  txt.innerHTML='<div class="spn"></div> Generating...';
+  document.getElementById('dash-out').innerHTML='<div style="height:160px;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px;gap:9px"><div class="spn spng"></div>AI working...</div>';
+  setTimeout(function(){
+    txt.innerHTML='✨ Generate with AI';
+    document.getElementById('dash-badge').style.display='inline-block';
+    renderMCQs('dash-out');
+  },1800);
+}
+
+function renderMCQs(id){
+  var c=document.getElementById(id);
+  c.innerHTML='';
+  mcqs.forEach(function(m,i){
+    var d=document.createElement('div');
+    d.className='mcard';
+    d.innerHTML='<div class="mq">Q'+(i+1)+'. '+m.q+'</div><div class="mopts">'+
+      m.opts.map(function(o,j){
+        return '<div class="mopt'+(j===m.ans?' cor':'')+'" onclick="this.classList.toggle(\'cor\')">'+String.fromCharCode(65+j)+'. '+o+'</div>';
+      }).join('')+'</div>';
+    c.appendChild(d);
+    setTimeout(function(){d.classList.add('vis')},70+i*90);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --g50: #ECFDF5; --g100: #D1FAE5; --g200: #A7F3D0;
+  --g400: #34D399; --g500: #10B981; --g600: #059669;
+  --g700: #047857; --g800: #065F46; --g900: #064E3B;
+  --ink: #0C1A14; --soft: #2D4A3E; --mut: #6B8F7A;
+  --bdr: rgba(16,185,129,0.18); --sur: #F0FDF8; --wht: #FFFFFF;
+  --ffd: 'DM Serif Display', Georgia, serif;
+  --ffb: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--ffb); background: var(--wht); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+
+/* Buttons */
+.btn-primary {
+  background: var(--g500); color: #fff; border: none;
+  border-radius: 10px; padding: 12px 24px; font-size: 15px;
+  font-weight: 600; cursor: pointer; font-family: var(--ffb);
+  transition: background .2s; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--g600); }
+.btn-primary:disabled { opacity: .6; cursor: wait; }
+
+.btn-secondary {
+  background: transparent; color: var(--g700);
+  border: 1.5px solid var(--g200); border-radius: 10px;
+  padding: 11px 22px; font-size: 15px; font-weight: 500;
+  cursor: pointer; font-family: var(--ffb); transition: all .2s;
+}
+.btn-secondary:hover { background: var(--g50); }
+
+/* Form elements */
+.input {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--bdr); border-radius: 9px;
+  font-family: var(--ffb); font-size: 14px; color: var(--ink);
+  background: var(--wht); outline: none; transition: border-color .2s;
+}
+.input:focus { border-color: var(--g400); }
+
+.select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--bdr); border-radius: 9px;
+  font-family: var(--ffb); font-size: 14px; color: var(--ink);
+  background: var(--wht); outline: none; cursor: pointer;
+}
+
+/* Card */
+.card {
+  background: var(--wht); border: 1px solid var(--bdr);
+  border-radius: 14px; padding: 20px;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite; display: inline-block;
+}
+.spinner-g {
+  border-color: rgba(16,185,129,.3);
+  border-top-color: var(--g500);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+.fade-up { animation: fadeUp .5s ease both; }
